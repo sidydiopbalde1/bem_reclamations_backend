@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0; background: #f4f4f4; }
+    .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+    .header { background: #1a73e8; color: #fff; padding: 24px 32px; }
+    .header h1 { margin: 0; font-size: 20px; }
+    .body { padding: 24px 32px; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; background: #e8f0fe; color: #1a73e8; }
+    .field { margin: 8px 0; }
+    .field strong { display: inline-block; width: 130px; color: #555; }
+    .footer { padding: 16px 32px; background: #f8f8f8; font-size: 12px; color: #888; border-top: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Nouvelle réclamation #{{number}}</h1>
+    </div>
+    <div class="body">
+      <p>Bonjour {{recipientName}},</p>
+      {{#if isReporter}}
+        <p>Votre réclamation a bien été enregistrée. Voici le récapitulatif :</p>
+      {{else}}
+        <p>Une nouvelle réclamation vient d'être soumise par <strong>{{reporterName}}</strong>.</p>
+      {{/if}}
+
+      <div class="field"><strong>Numéro :</strong> #{{number}}</div>
+      <div class="field"><strong>Catégorie :</strong> {{category}}</div>
+      <div class="field"><strong>Priorité :</strong> <span class="badge">{{priority}}</span></div>
+      <div class="field"><strong>Bâtiment :</strong> {{building}}</div>
+      <div class="field"><strong>Salle :</strong> {{room}}</div>
+      <div class="field"><strong>Programme :</strong> {{program}}</div>
+      <div class="field"><strong>Description :</strong> {{description}}</div>
+    </div>
+    <div class="footer">
+      Ceci est un message automatique — ne pas répondre directement.
+    </div>
+  </div>
+</body>
+</html>

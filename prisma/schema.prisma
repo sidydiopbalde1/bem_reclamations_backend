@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MOYENS_GENERAUX
+  VIGILE
+  DELEGUE
+}
+
+enum ReclamationCategory {
+  CLIMATISATION
+  MOBILIER
+  ECLAIRAGE
+  ELECTRICITE
+  EQUIPEMENT
+  PLOMBERIE
+  PROPRETE
+  AUTRE
+}
+
+enum ReclamationStatus {
+  OUVERTE
+  EN_COURS
+  RESOLUE
+  REJETEE
+}
+
+enum Priority {
+  BASSE
+  NORMALE
+  HAUTE
+  URGENTE
+}
+
+model User {
+  id           String             @id @default(uuid())
+  fullName     String
+  email        String             @unique
+  passwordHash String
+  role         Role
+  buildingId   String?
+  building     Building?          @relation(fields: [buildingId], references: [id])
+  reclamations Reclamation[]
+  events       ReclamationEvent[]
+  createdAt    DateTime           @default(now())
+}
+
+model Building {
+  id    String @id @default(uuid())
+  name  String @unique
+  rooms Room[]
+  users User[]
+}
+
+model Room {
+  id           String        @id @default(uuid())
+  number       String
+  buildingId   String
+  building     Building      @relation(fields: [buildingId], references: [id])
+  reclamations Reclamation[]
+
+  @@unique([buildingId, number])
+}
+
+model Program {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  reclamations Reclamation[]
+}
+
+model Reclamation {
+  id           String              @id @default(uuid())
+  number       Int                 @unique @default(autoincrement())
+  category     ReclamationCategory
+  priority     Priority            @default(NORMALE)
+  status       ReclamationStatus   @default(OUVERTE)
+  description  String
+  roomId       String
+  room         Room                @relation(fields: [roomId], references: [id])
+  programId    String
+  program      Program             @relation(fields: [programId], references: [id])
+  reportedById String
+  reportedBy   User                @relation(fields: [reportedById], references: [id])
+  events       ReclamationEvent[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  resolvedAt   DateTime?
+
+  @@index([status])
+  @@index([roomId])
+}
+
+model ReclamationEvent {
+  id            String             @id @default(uuid())
+  reclamationId String
+  reclamation   Reclamation        @relation(fields: [reclamationId], references: [id], onDelete: Cascade)
+  fromStatus    ReclamationStatus?
+  toStatus      ReclamationStatus
+  comment       String?
+  authorId      String
+  author        User               @relation(fields: [authorId], references: [id])
+  createdAt     DateTime           @default(now())
+}

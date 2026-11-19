@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; color: #1e293b; margin: 0; padding: 0; background: #f1f5f9; }
+    .wrapper { max-width: 640px; margin: 32px auto; padding: 0 16px; }
+    .container { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+
+    /* Header */
+    .header { background: linear-gradient(135deg, #CC0000, #990000); padding: 28px 32px; }
+    .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .logo { width: 42px; height: 42px; background: rgba(255,255,255,0.18); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #fff; line-height: 1; text-align: center; }
+    .header-title { color: #fff; font-size: 18px; font-weight: 900; margin: 0; }
+    .header-subtitle { color: rgba(255,255,255,0.75); font-size: 12px; margin: 2px 0 0; }
+    .alert-banner { margin-top: 14px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); border-radius: 8px; padding: 10px 14px; color: #fff; font-size: 13px; font-weight: 600; }
+    .alert-banner span { font-size: 18px; vertical-align: middle; margin-right: 8px; }
+
+    /* Summary bar */
+    .summary { display: flex; border-bottom: 1px solid #e2e8f0; }
+    .summary-item { flex: 1; text-align: center; padding: 16px 8px; border-right: 1px solid #e2e8f0; }
+    .summary-item:last-child { border-right: none; }
+    .summary-value { font-size: 26px; font-weight: 900; }
+    .summary-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-top: 2px; }
+    .s-total .summary-value { color: #0f172a; }
+    .s-urgente .summary-value { color: #dc2626; }
+    .s-haute .summary-value { color: #ea580c; }
+    .s-old .summary-value { color: #9333ea; }
+
+    /* Body */
+    .body { padding: 24px 32px; }
+    .greeting { font-size: 15px; margin: 0 0 20px; color: #334155; }
+    .section-title { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #CC0000; margin: 0 0 12px; padding-left: 10px; border-left: 3px solid #CC0000; }
+
+    /* Reclamation rows */
+    .rec-list { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+    .rec-row { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; border-bottom: 1px solid #f1f5f9; }
+    .rec-row:last-child { border-bottom: none; }
+    .rec-row:nth-child(even) { background: #fafafa; }
+    .rec-num { font-size: 11px; font-weight: 800; color: #64748b; background: #f1f5f9; border-radius: 6px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; }
+    .rec-main { flex: 1; min-width: 0; }
+    .rec-category { font-size: 13px; font-weight: 700; color: #0f172a; }
+    .rec-meta { font-size: 11px; color: #64748b; margin-top: 2px; }
+    .rec-desc { font-size: 12px; color: #475569; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
+    .rec-right { text-align: right; flex-shrink: 0; }
+    .badge { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+    .badge-URGENTE  { background: #fee2e2; color: #991b1b; }
+    .badge-HAUTE    { background: #ffedd5; color: #9a3412; }
+    .badge-NORMALE  { background: #eff6ff; color: #1e40af; }
+    .badge-BASSE    { background: #f0fdf4; color: #166534; }
+    .badge-OUVERTE  { background: #eff6ff; color: #1d4ed8; }
+    .badge-EN_COURS { background: #fff7ed; color: #c2410c; }
+    .days-old { font-size: 10px; color: #94a3b8; margin-top: 4px; }
+    .days-old.urgent { color: #dc2626; font-weight: 700; }
+
+    /* CTA */
+    .cta-section { text-align: center; padding: 20px 0 4px; }
+    .cta-btn { display: inline-block; background: linear-gradient(135deg, #CC0000, #990000); color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 700; letter-spacing: 0.02em; box-shadow: 0 4px 14px rgba(204,0,0,0.3); }
+    .cta-sub { font-size: 11px; color: #94a3b8; margin-top: 10px; }
+
+    /* Footer */
+    .footer { padding: 16px 32px; background: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+
+      <!-- Header -->
+      <div class="header">
+        <div class="header-top">
+          <div class="logo">R</div>
+          <div>
+            <p class="header-title">Rappel — Réclamations en attente</p>
+            <p class="header-subtitle">BEM Dakar · Système de gestion des réclamations</p>
+          </div>
+        </div>
+        <div class="alert-banner">
+          <span>⚠️</span>
+          {{total}} réclamation{{#if (gt total 1)}}s{{/if}} nécessite{{#unless (gt total 1)}}nt{{/unless}} votre attention aujourd'hui
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary">
+        <div class="summary-item s-total">
+          <div class="summary-value">{{total}}</div>
+          <div class="summary-label">Total</div>
+        </div>
+        <div class="summary-item s-urgente">
+          <div class="summary-value">{{urgentCount}}</div>
+          <div class="summary-label">Urgentes</div>
+        </div>
+        <div class="summary-item s-haute">
+          <div class="summary-value">{{highCount}}</div>
+          <div class="summary-label">Haute prio.</div>
+        </div>
+        <div class="summary-item s-old">
+          <div class="summary-value">{{oldCount}}</div>
+          <div class="summary-label">+3 jours</div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="body">
+        <p class="greeting">Bonjour <strong>{{recipientName}}</strong>,</p>
+        <p style="font-size:14px;color:#475569;margin:0 0 20px;">
+          Voici le récapitulatif des réclamations <strong>ouvertes ou en cours</strong> qui nécessitent une prise en charge.
+          Merci de traiter en priorité les réclamations urgentes et celles en attente depuis plus de 3 jours.
+        </p>
+
+        {{#if urgentItems.length}}
+        <p class="section-title">🔴 Urgentes ({{urgentItems.length}})</p>
+        <div class="rec-list">
+          {{#each urgentItems}}
+          <div class="rec-row">
+            <span class="rec-num">#{{this.number}}</span>
+            <div class="rec-main">
+              <div class="rec-category">{{this.category}}</div>
+              <div class="rec-meta">{{this.building}} — Salle {{this.room}} · {{this.program}}</div>
+              <div class="rec-desc">{{this.description}}</div>
+            </div>
+            <div class="rec-right">
+              <span class="badge badge-{{this.priority}}">{{this.priority}}</span><br/>
+              <span class="badge badge-{{this.status}}" style="margin-top:4px;display:inline-block;">{{this.status}}</span>
+              <div class="days-old urgent">{{this.daysOld}}j</div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if highItems.length}}
+        <p class="section-title">🟠 Priorité haute ({{highItems.length}})</p>
+        <div class="rec-list">
+          {{#each highItems}}
+          <div class="rec-row">
+            <span class="rec-num">#{{this.number}}</span>
+            <div class="rec-main">
+              <div class="rec-category">{{this.category}}</div>
+              <div class="rec-meta">{{this.building}} — Salle {{this.room}} · {{this.program}}</div>
+              <div class="rec-desc">{{this.description}}</div>
+            </div>
+            <div class="rec-right">
+              <span class="badge badge-{{this.priority}}">{{this.priority}}</span><br/>
+              <span class="badge badge-{{this.status}}" style="margin-top:4px;display:inline-block;">{{this.status}}</span>
+              <div class="days-old {{#if (gt this.daysOld 3)}}urgent{{/if}}">{{this.daysOld}}j</div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        {{#if otherItems.length}}
+        <p class="section-title">📋 Autres ({{otherItems.length}})</p>
+        <div class="rec-list">
+          {{#each otherItems}}
+          <div class="rec-row">
+            <span class="rec-num">#{{this.number}}</span>
+            <div class="rec-main">
+              <div class="rec-category">{{this.category}}</div>
+              <div class="rec-meta">{{this.building}} — Salle {{this.room}} · {{this.program}}</div>
+              <div class="rec-desc">{{this.description}}</div>
+            </div>
+            <div class="rec-right">
+              <span class="badge badge-{{this.priority}}">{{this.priority}}</span><br/>
+              <span class="badge badge-{{this.status}}" style="margin-top:4px;display:inline-block;">{{this.status}}</span>
+              <div class="days-old {{#if (gt this.daysOld 3)}}urgent{{/if}}">{{this.daysOld}}j</div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        <div class="cta-section">
+          <a href="{{appUrl}}/reclamations/list" class="cta-btn">Accéder à la liste des réclamations →</a>
+          <p class="cta-sub">Généré le {{generatedAt}}</p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <span>BEM Dakar - Système de gestion des réclamations</span>
+        <span>Message automatique · Ne pas répondre</span>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

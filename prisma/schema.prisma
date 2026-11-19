@@ -10,6 +10,7 @@ datasource db {
 enum Role {
   ADMIN
   MOYENS_GENERAUX
+  REGULATEUR
   VIGILE
   DELEGUE
 }
@@ -40,16 +41,37 @@ enum Priority {
 }
 
 model User {
-  id           String             @id @default(uuid())
-  fullName     String
-  email        String             @unique
-  passwordHash String
-  role         Role
-  buildingId   String?
-  building     Building?          @relation(fields: [buildingId], references: [id])
-  reclamations Reclamation[]
-  events       ReclamationEvent[]
-  createdAt    DateTime           @default(now())
+  id                    String             @id @default(uuid())
+  fullName              String
+  email                 String             @unique
+  passwordHash          String
+  mustChangePassword    Boolean            @default(true)
+  role                  Role
+  buildingId            String?
+  building              Building?          @relation(fields: [buildingId], references: [id])
+  programId             String?
+  program               Program?           @relation(fields: [programId], references: [id])
+  reportedReclamations  Reclamation[]      @relation("ReportedBy")
+  assignedReclamations  Reclamation[]      @relation("AssignedReclamations")
+  events                ReclamationEvent[]
+  auditLogs             AuditLog[]
+  createdAt             DateTime           @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String?
+  entityId  String?
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
 }
 
 model Building {
@@ -72,26 +94,29 @@ model Room {
 model Program {
   id           String        @id @default(uuid())
   name         String        @unique
+  users        User[]
   reclamations Reclamation[]
 }
 
 model Reclamation {
-  id           String              @id @default(uuid())
-  number       Int                 @unique @default(autoincrement())
-  category     ReclamationCategory
-  priority     Priority            @default(NORMALE)
-  status       ReclamationStatus   @default(OUVERTE)
-  description  String
-  roomId       String
-  room         Room                @relation(fields: [roomId], references: [id])
-  programId    String
-  program      Program             @relation(fields: [programId], references: [id])
-  reportedById String
-  reportedBy   User                @relation(fields: [reportedById], references: [id])
-  events       ReclamationEvent[]
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
-  resolvedAt   DateTime?
+  id             String              @id @default(uuid())
+  number         Int                 @unique @default(autoincrement())
+  category       ReclamationCategory
+  priority       Priority            @default(NORMALE)
+  status         ReclamationStatus   @default(OUVERTE)
+  description    String
+  roomId         String
+  room           Room                @relation(fields: [roomId], references: [id])
+  programId      String
+  program        Program             @relation(fields: [programId], references: [id])
+  reportedById   String
+  reportedBy     User                @relation("ReportedBy", fields: [reportedById], references: [id])
+  assignedToId   String?
+  assignedTo     User?               @relation("AssignedReclamations", fields: [assignedToId], references: [id])
+  events         ReclamationEvent[]
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  resolvedAt     DateTime?
 
   @@index([status])
   @@index([roomId])

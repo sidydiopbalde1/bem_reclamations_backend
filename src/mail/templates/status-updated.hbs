@@ -24,7 +24,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Réclamation #{{number}} — Mise à jour du statut</h1>
+      <h1>Réclamation #{{number}} -Mise à jour du statut</h1>
     </div>
     <div class="body">
       <p>Bonjour {{recipientName}},</p>
@@ -46,6 +46,14 @@
         {{comment}}
       </div>
       {{/if}}
+
+      <div style="text-align:center;margin-top:28px;padding-top:20px;border-top:1px solid #eee;">
+        <a href="{{appUrl}}/reclamations/{{reclamationId}}"
+           style="display:inline-block;background:#1a73e8;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:0.02em;">
+          Voir la réclamation →
+        </a>
+        <p style="margin:10px 0 0;font-size:11px;color:#94a3b8;">Ou copiez ce lien : {{appUrl}}/reclamations/{{reclamationId}}</p>
+      </div>
     </div>
     <div class="footer">
       Ceci est un message automatique — ne pas répondre directement.

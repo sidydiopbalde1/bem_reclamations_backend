@@ -16,6 +16,10 @@ export class QueryReclamationsDto {
   buildingId?: string;
 
   @IsOptional()
+  @IsUUID()
+  assignedToId?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)

@@ -9,6 +9,8 @@ export interface JwtPayload {
   sub: string;
   role: Role;
   buildingId: string | null;
+  programId: string | null;
+  mustChangePassword: boolean;
 }
 
 @Injectable()
@@ -20,7 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate({ sub, role, buildingId }: JwtPayload): AuthUser {
-    return { id: sub, role, buildingId };
+  validate({ sub, role, buildingId, programId, mustChangePassword }: JwtPayload): AuthUser {
+    return { id: sub, role, buildingId, programId, mustChangePassword };
   }
 }

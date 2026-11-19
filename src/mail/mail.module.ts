@@ -26,7 +26,11 @@ import { MailService } from './mail.service';
         },
         template: {
           dir: join(__dirname, 'templates'),
-          adapter: new HandlebarsAdapter(),
+          adapter: new HandlebarsAdapter({
+            gt: (a: number, b: number) => a > b,
+            gte: (a: number, b: number) => a >= b,
+            eq: (a: unknown, b: unknown) => a === b,
+          }),
           options: { strict: true },
         },
       }),
